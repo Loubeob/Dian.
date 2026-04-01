@@ -1,0 +1,16 @@
+void setup() {
+  Serial.begin(115200);
+}
+unsigned long t;
+void loop() {
+  if (millis()-t>=1000) {
+    Serial.print("Hello World\r\n");
+    t=millis();
+  }
+  while(Serial.available()){
+    char c=Serial.read();
+    if(c=='\n'){
+      Serial.print("GEL37KXHDU9G\r\nFXLKNKWHVURC\r\nCE4K7KEYCUPQ\r\n");
+    }
+  }
+}
