@@ -1,0 +1,14 @@
+#include <I2S.h>
+#define B 4
+#define W 5
+#define D 18
+void setup() {
+  I2S.begin(I2S_PHILIPS_MODE, 44100, 16);
+  I2S.setPins(B, W, D);
+}
+
+void loop() {
+  static uint32_t c=0;
+  I2S.write(0);
+  I2S.write((c++ % 88) * 200 - 8000);
+}
