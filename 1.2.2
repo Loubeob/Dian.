@@ -1,0 +1,18 @@
+#include <I2S.h>
+#include <math.h>
+#define B 4
+#define W 5
+#define D 18
+#define PI 3.14159265
+void setup() {
+  I2S.begin(I2S_PHILIPS_MODE, 44100, 16);
+  I2S.setPins(B, W, D);
+}
+void loop() {
+  static int c=0;
+  int l = 8000 * sin(2 * PI * 1001 * c / 44100.0);
+  int r = 8000 * sin(2 * PI * 999 * c / 44100.0);
+  I2S.write(l);
+  I2S.write(r);
+  c++;
+}
