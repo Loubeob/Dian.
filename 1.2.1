@@ -1,14 +1,31 @@
-#include <I2S.h>
-#define B 4
-#define W 5
-#define D 18
-void setup() {
-  I2S.begin(I2S_PHILIPS_MODE, 44100, 16);
-  I2S.setPins(B, W, D);
+#include <driver/i2s.h>
+#include <math.h>
+#define B 41
+#define W 40
+#define D 42
+
+void setup(){
+  i2s_config_t c={
+    .mode = (i2s_mode_t)(I2S_MODE_MASTER|I2S_MODE_TX),
+    .sample_rate = 44100,
+    .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,
+    .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
+    .communication_format = I2S_COMM_FORMAT_STAND_I2S,
+    .dma_buf_count = 2,
+    .dma_buf_len = 64
+  };
+  i2s_pin_config_t p={.bck_io_num=B,.ws_io_num=W,.data_out_num=D,.data_in_num=-1};
+  i2s_driver_install(I2S_NUM_0,&c,0,NULL);
+  i2s_set_pin(I2S_NUM_0,&p);
 }
 
-void loop() {
-  static uint32_t c=0;
-  I2S.write(0);
-  I2S.write((c++ % 88) * 200 - 8000);
+void loop(){
+  static int t=0;
+  float f = 2 * PI * t / 44100.0f;
+  int16_t l = 500 * cos(1001 * f);
+  int16_t r = 500 * cos(999 * f);
+  int32_t o = (r << 16) | (l & 0xFFFF);
+  size_t w;
+  i2s_write(I2S_NUM_0, &o, 4, &w, portMAX_DELAY);
+  t++;
 }
