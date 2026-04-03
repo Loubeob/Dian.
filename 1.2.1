@@ -1,5 +1,5 @@
 #include <driver/i2s.h>
-#include <math.h>
+
 #define B 41
 #define W 40
 #define D 42
@@ -21,11 +21,9 @@ void setup(){
 
 void loop(){
   static int t=0;
-  float f = 2 * PI * t / 44100.0f;
-  int16_t l = 500 * cos(1001 * f);
-  int16_t r = 500 * cos(999 * f);
+  int16_t l = 0;
+  int16_t r = (t++ % 88) * 200 - 8000;
   int32_t o = (r << 16) | (l & 0xFFFF);
   size_t w;
   i2s_write(I2S_NUM_0, &o, 4, &w, portMAX_DELAY);
-  t++;
 }
